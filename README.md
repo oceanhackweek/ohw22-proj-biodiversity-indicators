@@ -1,10 +1,12 @@
 # Desarrollo de indicadores de biodiversidad (ohw22-proj-biodiversity-indicators)
 ---
-## Descripción corta
+## Descripción corta  
 Desarrollo de indicadores de biodiversidad para las Islas Galápagos
+
 ---
 ### Colaboradores
 Nathalia Tirado, Cristian Jitala, Virginia García Alonso, Denisse Fierro Arcos
+
 ---
 ### Antecedentes
 Set de datos de ensamblajes de peces en las Galápagos está disponible para desarrollar indicadores de biodiversidad. Datos obtenidos durante 15 años.  
