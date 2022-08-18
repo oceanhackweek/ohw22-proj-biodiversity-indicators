@@ -5,7 +5,7 @@ Desarrollo de indicadores de biodiversidad para las Islas Galápagos
 
 ---
 ### Colaboradores
-Nathalia Tirado, Cristian Jitala, Virginia García Alonso, Denisse Fierro Arcos..
+Nathalia Tirado, Cristian Jitala, Virginia García Alonso, Denisse Fierro Arcos.
 
 ---
 ### Antecedentes
