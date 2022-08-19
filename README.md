@@ -1,7 +1,7 @@
-# Desarrollo de indicadores de biodiversidad (ohw22-proj-biodiversity-indicators)
+#Estimación y comparación de indicadores de biodiversidad (ohw22-proj-biodiversity-indicators)
 ---
 ## Descripción corta  
-Desarrollo de indicadores de biodiversidad para las Islas Galápagos
+Indicadores de biodiversidad para las Islas Galápagos
 
 ---
 ### Colaboradores
@@ -9,15 +9,17 @@ Nathalia Tirado, Cristian Jitala, Virginia García Alonso, Denisse Fierro Arcos.
 
 ---
 ### Antecedentes
-Set de datos de ensamblajes de peces en las Galápagos está disponible para desarrollar indicadores de biodiversidad. Datos obtenidos durante 15 años.  
-Por definir:
-* ¿Cómo se obtuvieron datos?
-* ¿Qué datos están disponibles? - Por ej., abundancia, presencia/ausencia de especies/familias/grupos funcionales, etc. 
+Datos OBIS de biodiversidad
+
+Set de nuevos datos de especies en las Galápagos está disponible para desarrollar indicadores de biodiversidad. Datos obtenidos durante 15 años.  
 
 ### Objetivos
+*Estimar índice de diversidad de Shannon de datos OBIS para las Islas Galápagos
+*Estimar índice de diversidad de Shannon para los nuevos datos de las Islas Galápagos
+*Analizar la correlación entre este índice y la temperatura superficial del mar (en construcción)
+
 Por definir, pero algunas ideas incluidas abajo
 * Chequear correlación/ajuste datos Obis con datos propios
-* A que escala espacial y temporal?
 * Ver si existe alguna asociación con variables ambientales
 * Cambios en el tiempo/espacio?
 * Qué variables son necesarias?
