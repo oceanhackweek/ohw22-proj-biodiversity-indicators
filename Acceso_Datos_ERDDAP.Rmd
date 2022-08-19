@@ -1,0 +1,447 @@
+---
+title: "Data Access in R - OceanHackWeek 2022"
+author: "Johnathan Evanilla"
+date: "8/10/2022"
+output: 
+  html_document: default
+  github_document: default
+---
+
+
+
+```{r}
+suppressPackageStartupMessages({
+  # from CRAN
+  library(dplyr)
+  library(sf)
+  library(stars)
+  library(readr)
+  
+  library(rerddap)
+  library(ncdf4)
+  library(leaflet)
+  library(ggplot2)
+  library(mapdata)
+  
+  # from Github
+  library(xyzt)
+  library(ghrsst)
+  library(stringr)
+  library(raster)
+})
+
+```
+
+
+
+## 1) ERDDAP
+
+[rerddap](https://docs.ropensci.org/rerddap/index.html)
+
+### Get a listing of servers that rerddap knows about
+
+```{r}
+s <- servers()
+
+s
+```
+
+```{r}
+#View(s)
+```
+
+[Coastwatch ERDDAP Webpage](https://coastwatch.pfeg.noaa.gov/erddap/index.html)
+
+```{r}
+s |> 
+  filter(short_name == "CSWC")
+```
+
+### What types of data are available in the server?
+
+
+```{r}
+ds_t <- ed_datasets(url="https://coastwatch.pfeg.noaa.gov/erddap/")
+ds_g <- ed_datasets(url="https://coastwatch.pfeg.noaa.gov/erddap/", which="griddap")
+
+paste("We have", sum(ds_t$tabledap!=""), "tabledap", sum(ds_g$griddap!=""), "griddap", sep=" ")
+```
+
+
+### Let us narrow our search to deployments that are within a lon/lat/time extent.
+
+[leaflet](https://rstudio.github.io/leaflet/)
+
+```{r}
+lon <- c(-92, -89)
+lat <- c(-2, 2)
+
+leaflet() |>
+  addTiles() |>
+  setView(lng=sum(lon)/2, 
+          lat=sum(lat)/2, 
+          zoom=6) |>
+  addRectangles(lng1 = lon[1],
+                lng2 = lon[2],
+                lat1 = lat[1],
+                lat2 = lat[2])
+
+```
+
+
+```{r}
+out_td <- ed_search_adv(which = "griddap",
+                        url="https://coastwatch.pfeg.noaa.gov/erddap/",
+                        minLat=-2,
+                        maxLat=2,
+                        minLon=-92,
+                        maxLon=-89,
+                        minTime = "2004-01-01T00:00:00Z",
+                        maxTime = "2022-07-31T00:00:00Z")
+
+out_td
+```
+
+```{r}
+paste("Found", length(out_td$alldata), "Datasets:", sep=" ")
+```
+
+
+
+### Let's query all the datasets that have _landings_ data
+
+```{r}
+out <- ed_search(query = "SST", 
+                 which = "griddap",
+                 url="https://upwell.pfeg.noaa.gov/erddap/")
+
+dataset_ids <- out$info$dataset_id
+
+out
+```
+
+
+```{r}
+#Dataframe con informacion de datasets disponibles sobre temperatura superficial
+sst_dataset <- out$info %>% 
+  #Filtrado para datos MODIS
+  filter(str_detect(str_to_lower(title), "modis") & 
+           str_detect(str_to_lower(title), "daytime") &
+           str_detect(str_to_lower(title), "4km") & 
+           str_detect(str_to_lower(title), "monthly"))
+
+sst_dataset
+```
+
+
+### Get info on an erddap dataset
+
+```{r}
+info(sst_dataset$dataset_id[2], 
+     url="https://upwell.pfeg.noaa.gov/erddap/")
+```
+
+
+```{r}
+temp_Gps <- griddap(x = sst_dataset$dataset_id[2],
+                    latitude=c(-2, 2),
+                    longitude=c(-92,-89),
+                    time=c("2022-01-01","2022-02-28"),
+                    fields = "sst",
+                    fmt = "csv")
+
+temp_Gps %>% 
+  write.csv("Data/SST_Gps_2022-01-01_2022-02-28.csv", 
+            row.names = F)
+```
+
+```{r}
+temp_Gps_nc <- griddap(x = sst_dataset$dataset_id[2],
+                    latitude=c(-2, 2),
+                    longitude=c(-92,-89),
+                    time=c("2022-01-01","2022-02-28"),
+                    fields = "sst",
+                    fmt = "nc",
+                    store = disk(path = "../../../ohw22-proj-biodiversity-indicators/Data/"))
+
+temp_Gps_nc
+
+
+
+sst_raster <- raster::raster("../../../ohw22-proj-biodiversity-indicators/Data/e11136594a145f6c452c0e63764b231c.nc")
+
+prom_sst_gps <- raster::mean(sst_raster, 3)
+raster::plot(sst_raster)
+```
+```{r}
+raster::plot(prom_sst_gps)
+```
+
+
+
+```{r}
+class(temp_Gps)
+```
+
+```{r}
+summary(temp_Gps)
+```
+
+
+```{r}
+
+temp_Gps %>% 
+  filter(lubridate::month(time) == 3 |
+           lubridate::month(time) == 4)
+
+
+# landings_sub <- landings |>
+#   tibble() |>
+#   mutate(pounds = as.numeric(pounds)) |>
+#   select(year, month, description, pounds)
+
+
+```
+
+
+```{r}
+summary(landings_sub)
+```
+
+```{r}
+counts <- landings_sub |>
+  count(description) |>
+  arrange(desc(n))
+
+counts
+```
+
+
+```{r}
+albacore <- landings_sub |>
+  filter(description == "Tuna, albacore") |>
+  group_by(year, month) |>
+  summarise(pounds = sum(pounds)) 
+
+albacore
+```
+
+
+```{r}
+plot(x=albacore$month, y=albacore$pounds)
+```
+
+
+```{r}
+albacore |>
+  group_by(year) |>
+  summarise(pounds = sum(pounds)) |>
+  ggplot(aes(x=year, y=pounds)) +
+  geom_line()
+```
+
+```{r}
+summary(albacore)
+```
+
+
+
+```{r}
+anchovies <- landings_sub |>
+  filter(description == "Anchovy, northern") |>
+  group_by(year) |>
+  summarise(pounds = sum(pounds)) 
+
+anchovies
+```
+
+```{r}
+albacore
+```
+
+
+```{r}
+albacore |>
+  group_by(year) |>
+  summarise(albacore_pounds = sum(pounds)) |>
+  mutate(anchovy_pounds = anchovies$pounds) |>
+  ggplot(aes(x = anchovy_pounds, y=albacore_pounds)) +
+  geom_point()
+```
+
+
+
+
+### Accessing griddap data
+
+Make a sea surface temperature map with the latest mur data for the Southern California Bight
+
+
+```{r}
+out_gd <- ed_search_adv(query = "sst",
+                        protocol = "griddap",
+                        url="https://coastwatch.pfeg.noaa.gov/erddap/",
+                        minLat=30,
+                        maxLat=35,
+                        minLon=-123,
+                        maxLon=-117,
+                        minTime = "2022-08-01T00:00:00Z",
+                        maxTime = "2022-08-15T00:00:00Z")
+
+out_gd
+
+```
+
+
+```{r}
+out_gd$info$dataset_id
+```
+
+```{r}
+mur_sst <- griddap("jplMURSST41", 
+                   latitude = c(32,34), 
+                   longitude = c(-119,-116), 
+                   time = c('last','last'), 
+                   fields = 'analysed_sst',
+                   url="https://coastwatch.pfeg.noaa.gov/erddap/")
+mur_sst
+```
+
+
+
+```{r}
+worldmap <- map_data("worldHires", ylim = c(32, 34), xlim = c(-119, -116))
+
+ggplot(data=mur_sst$data, aes(x=lon, y=lat, fill=analysed_sst)) +
+  geom_polygon(data=worldmap, aes(x = long, y = lat, group = group), fill = "grey80") +
+  geom_tile() +
+  scale_fill_gradientn(colours = colors$temperature, na.value = NA) +
+  coord_fixed(1.3, ylim = c(32, 34), xlim = c(-119, -116))
+```
+
+
+## 2) OPeNDAP
+
+
+[NetCDF4 Cheat Sheet](https://www.r-bloggers.com/2016/08/a-netcdf-4-in-r-cheatsheet/)
+
+### Bigelow Homegrown R Packages
+
+[Intro Video](https://youtu.be/2ZWFYWMwq1c)
+
+[xyzt](https://github.com/BigelowLab/xyzt)
+[ghrsst](https://github.com/BigelowLab/ghrsst)
+
+[MUR Catalog](https://opendap.jpl.nasa.gov/opendap/hyrax/OceanTemperature/)
+
+### Compose a URL and open a connection to MUR data
+
+```{r}
+url <- "https://opendap.jpl.nasa.gov/opendap/OceanTemperature/ghrsst/data/GDS2/L4/GLOB/JPL/MUR/v4.1/2022/226/20220814090000-JPL-L4_GHRSST-SSTfnd-MUR-GLOB-v02.0-fv04.1.nc"
+
+
+X <- nc_open(url)
+```
+
+### Retrieve the variables contained in the netcdf object
+
+```{r}
+#From ghrsst package
+mur_vars(X)
+```
+### Retrieve the spatial resolution stated in the global metadata
+
+```{r}
+mur_res(X)
+```
+
+## Read in CalCOFI Station Data
+
+```{r}
+x <- xyzt::read_calcofi()
+
+x
+```
+
+
+## Change x to be an sf object containing points
+
+
+```{r}
+points <- x |> 
+  head(n=12) |>
+  as_POINT()
+```
+
+
+```{r}
+covars <- ghrsst::extract(points, 
+                          X, 
+                          varname = "analysed_sst")
+
+(y <- dplyr::bind_cols(x |> head(n=12), covars))
+
+y
+```
+
+```{r}
+summary(y)
+```
+
+
+
+## Change x to be an sf object containing a bounding box
+
+```{r}
+bbox <- x |>
+  as_BBOX()
+```
+
+
+### Extract the bounding box
+
+```{r}
+layer <- ghrsst::extract(bbox, X, 
+                          varname = "analysed_sst")
+
+layer
+```
+
+### Plot the layer we extracted and the points on top
+
+```{r}
+par(mfrow = c(1,2))
+plot(layer, attr = 'analysed_sst', col = sf.colors(n=6), axes = TRUE, reset = FALSE)
+plot(sf::st_geometry(points), add = TRUE, col = "black", pch = 19, cex = 1)
+```
+
+### Close the connection
+
+```{r}
+nc_close(X)
+```
+
+
+## 3) WMS
+
+### Learning Objectives: Plot a WMS layer on an interactive map
+
+- Add a WMS layer to an interactive map. ("GEBCO - General Bathymetric Chart of the Oceans")
+
+
+```{r}
+leaflet() |>
+  addTiles() |>
+  setView(lng = -117,
+          lat = 34,
+          zoom = 5) |>
+  addWMSTiles(
+    "https://www.gebco.net/data_and_products/gebco_web_services/web_map_service/mapserv?",
+    layers = "GEBCO_latest",
+    options = WMSTileOptions(format = "image/png", transparent = TRUE),
+    attribution="GEBCO")
+
+```
+
+
+

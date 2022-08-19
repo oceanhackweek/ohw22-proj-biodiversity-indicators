@@ -1,7 +1,7 @@
 # Desarrollo de indicadores de biodiversidad (ohw22-proj-biodiversity-indicators)
 ---
 ## Descripción corta  
-Desarrollo de indicadores de biodiversidad para las Islas Galápagos
+Comparar indicadores biológicos para las Islas Galápagos calculados con datos OBIS y datos recolectados por la Fundación Charles Darwin. Además encontrar correlaciones entre la temperatura superficial y estos indicaores
 
 ---
 ### Colaboradores
@@ -9,18 +9,14 @@ Nathalia Tirado, Cristian Jitala, Virginia García Alonso, Denisse Fierro Arcos.
 
 ---
 ### Antecedentes
-Set de datos de ensamblajes de peces en las Galápagos está disponible para desarrollar indicadores de biodiversidad. Datos obtenidos durante 15 años.  
-Por definir:
-* ¿Cómo se obtuvieron datos?
-* ¿Qué datos están disponibles? - Por ej., abundancia, presencia/ausencia de especies/familias/grupos funcionales, etc. 
+Datos de ensamblaje de peces y macro invertebrados de las Islas Galápagos han sido recolectados por más de una década. Estos datos se compararán con datos disponibles de manera libre en OBIS.
+
+Información de temperatura del agua obtenidos por satélites y disponibles en ERDDAP se utilizarán para llevar a cabo correlaciones con los ensamblajes de peces. 
 
 ### Objetivos
-Por definir, pero algunas ideas incluidas abajo
-* Chequear correlación/ajuste datos Obis con datos propios
-* A que escala espacial y temporal?
-* Ver si existe alguna asociación con variables ambientales
+* Verificar correlación/ajuste datos Obis con datos propios
+* Investigar si existe alguna asociación con temperatura superficial
 * Cambios en el tiempo/espacio?
-* Qué variables son necesarias?
 
 ### Bases de datos
 Páginas de interés:
