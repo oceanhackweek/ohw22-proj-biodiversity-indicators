@@ -14,11 +14,11 @@ Datos OBIS de biodiversidad
 Set de nuevos datos de especies en las Galápagos está disponible para desarrollar indicadores de biodiversidad. Datos obtenidos durante 15 años.  
 
 ### Objetivos
-*Estimar índice de diversidad de Shannon de datos OBIS para las Islas Galápagos
-*Estimar índice de diversidad de Shannon para los nuevos datos de las Islas Galápagos
-*Analizar la correlación entre este índice y la temperatura superficial del mar (en construcción)
+* Estimar índice de diversidad de Shannon de datos OBIS para las Islas Galápagos
+* Estimar índice de diversidad de Shannon para los nuevos datos de las Islas Galápagos
+* Analizar la correlación entre este índice y la temperatura superficial del mar (en construcción)
 
-Por definir, pero algunas ideas incluidas abajo
+Por definir/corroborar
 * Chequear correlación/ajuste datos Obis con datos propios
 * Ver si existe alguna asociación con variables ambientales
 * Cambios en el tiempo/espacio?
