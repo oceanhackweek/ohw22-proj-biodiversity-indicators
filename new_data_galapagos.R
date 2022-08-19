@@ -5,11 +5,12 @@ library(rnaturalearth)
 library(rnaturalearthdata)
 library(rnaturalearthhires)
 library(sf)
-library(ggspatial) #annotation_north_arrow(), annotation_scale()
 #remotes::install_github("marinebon/obisindicators")
 library(obisindicators)
+# remotes::install_github("r-barnes/dggridR")
+library(dggridR)  
 #remotes::install_github("ropensci/rerddap")
-library(rerddap) #en el caso 
+library(rerddap) # en el caso de que bajen datos de ERDDAP 
 library(tidyverse) 
 library(readxl)
 
@@ -33,25 +34,20 @@ sp_gal <-
   #remove rows with longitude 0 (probably a mistake while passing data)
   filter(Long_dec!=0) %>% 
   
-  #select columns
-  select(Year, Dive.Date, Lat_Dec, Long_dec, ScientificName) %>% 
-  
   #rename variable
-  rename(species = ScientificName) %>% 
+  rename(species = ScientificName) %>%
+
+  #select columns
+  select(Lat_Dec, Long_dec, species) %>%
   
   #group data according to diving site
-  group_by(Lat_Dec, Long_dec, species) %>% 
+  group_by(Lat_Dec, Long_dec, species) %>%
   
-  #count the number of records in that position
-  mutate(records = n()) %>% 
-
-  #remove duplicate rows for species
-  distinct(Lat_Dec, Long_dec, species, .keep_all = TRUE) %>% 
-
-  #generate new variable (to match obis dataset)
-  #mutate(date_year = paste(Year, Dive.Date, sep = "_")) %>% 
+  #retrieve data into a local tibble
+  collect() %>%
   
-  as_tibble()
+  #count number of times each sp is seen in each site
+  summarize(records = n()) 
 
 
 # Create a discrete global grid using the dggridR package:
