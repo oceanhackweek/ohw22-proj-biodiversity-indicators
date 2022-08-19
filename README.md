@@ -17,7 +17,6 @@ Información de temperatura del agua obtenidos por satélites y disponibles en E
 * Estimar índice de diversidad de Shannon de datos OBIS para las Islas Galápagos
 * Estimar índice de diversidad de Shannon para los nuevos datos de las Islas Galápagos
 * Analizar la correlación entre este índice y la temperatura superficial del mar (en construcción)
-* Investigar si existe alguna asociación con temperatura superficial
 * Cambios en el tiempo/espacio?
 
 ### Bases de datos
