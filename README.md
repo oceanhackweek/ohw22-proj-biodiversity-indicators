@@ -1,4 +1,4 @@
-# Desarrollo de indicadores de biodiversidad (ohw22-proj-biodiversity-indicators)
+#Estimación y comparación de indicadores de biodiversidad (ohw22-proj-biodiversity-indicators)
 ---
 ## Descripción corta  
 Comparar indicadores biológicos para las Islas Galápagos calculados con datos OBIS y datos recolectados por la Fundación Charles Darwin. Además encontrar correlaciones entre la temperatura superficial y estos indicaores
@@ -14,7 +14,9 @@ Datos de ensamblaje de peces y macro invertebrados de las Islas Galápagos han s
 Información de temperatura del agua obtenidos por satélites y disponibles en ERDDAP se utilizarán para llevar a cabo correlaciones con los ensamblajes de peces. 
 
 ### Objetivos
-* Verificar correlación/ajuste datos Obis con datos propios
+* Estimar índice de diversidad de Shannon de datos OBIS para las Islas Galápagos
+* Estimar índice de diversidad de Shannon para los nuevos datos de las Islas Galápagos
+* Analizar la correlación entre este índice y la temperatura superficial del mar (en construcción)
 * Investigar si existe alguna asociación con temperatura superficial
 * Cambios en el tiempo/espacio?
 
