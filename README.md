@@ -1,4 +1,4 @@
-#Estimación y comparación de indicadores de biodiversidad (ohw22-proj-biodiversity-indicators)
+# Estimación y comparación de indicadores de biodiversidad (ohw22-proj-biodiversity-indicators)
 ---
 ## Descripción corta  
 Comparar indicadores biológicos para las Islas Galápagos calculados con datos OBIS y datos recolectados por la Fundación Charles Darwin. Además encontrar correlaciones entre la temperatura superficial y estos indicaores
