@@ -11,7 +11,7 @@ Nathalia Tirado, Cristian Jitala, Virginia García Alonso, Denisse Fierro Arcos.
 ### Antecedentes
 Datos de ensamblaje de peces y macro invertebrados de las Islas Galápagos han sido recolectados por más de una década. Estos datos se compararán con datos disponibles de manera libre en OBIS que se pueden ver a continuación:
 
-![OBIS data for Galapagos Islands](OBIS data GI.jpeg)
+![OBIS data for Galapagos Islands](https://github.com/oceanhackweek/ohw22-proj-biodiversity-indicators/blob/main/OBIS%20data%20GI.jpeg)
 
 Información de temperatura del agua obtenidos por satélites y disponibles en ERDDAP se utilizarán para llevar a cabo correlaciones con los ensamblajes de peces. 
 
